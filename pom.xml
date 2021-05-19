@@ -8,27 +8,18 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	
-	<groupId>eu.arrowhead</groupId>	
-	<artifactId>client-skeleton</artifactId>
-	<version>4.4.1</version>
-	<packaging>pom</packaging>
-	<name>client-skeleton-java-spring</name>
-	<description>Arrowhead Client Skeleton using Spring Boot</description>
+	<groupId>ai.aitia</groupId>	
+	<artifactId>qos-ping-provider</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	<name>Arrowhead QoS Ping Provider</name>
 	
-	<url>https://github.com/arrowhead-f/client-java-spring</url>
 	<licenses>
     	<license>
 	     	<name>Eclipse Public License - v 2.0</name>
 	     	<url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
 	   </license>
   	</licenses>
-	
-	<modules>
-	    <module>client-skeleton-consumer</module>
-	    <module>client-skeleton-provider</module>
-	    <module>client-skeleton-subscriber</module>
-	    <module>client-skeleton-publisher</module>
-  	</modules>
 		
 	<dependencies>
 		<!-- TODO: upload this version of the package to the Github -->
@@ -48,6 +39,13 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/resources/client-library-4.4.1.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>eu.arrowhead</groupId>
+			<artifactId>core-client-skeleton</artifactId>
+			<version>4.4.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/core-client-skeleton.jar</systemPath>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -55,7 +53,39 @@
 			<plugin>
     			<groupId>org.springframework.boot</groupId>
     			<artifactId>spring-boot-maven-plugin</artifactId>
-  			</plugin>  			  			
-  		</plugins>
-  	</build>	
+    			<executions>
+    				<execution>
+    					<goals>
+    						<goal>repackage</goal>
+    					</goals>
+    				</execution>
+    			</executions>
+  			</plugin>
+  			
+  			<plugin>
+	 			<artifactId>maven-resources-plugin</artifactId>
+	        	<version>3.1.0</version>
+	        	<executions>
+	          		<execution>
+	            		<id>copy-resources</id>
+	            		<phase>validate</phase>
+		            	<goals>
+		              		<goal>copy-resources</goal>
+		            	</goals>
+		            	<configuration>
+		              		<outputDirectory>${basedir}/target</outputDirectory>
+		              		<resources>
+		                		<resource>
+		                  			<directory>src/main/resources</directory>
+		                  			<includes>
+		                  				<include>application.properties</include>
+		                  			</includes>
+		                		</resource>
+		              		</resources>
+		            	</configuration>
+	          		</execution>
+	        	</executions>
+	      	</plugin>
+		</plugins>
+	</build>	
 </project>
