@@ -14,12 +14,13 @@
 	<packaging>jar</packaging>
 	<name>Arrowhead QoS Ping Provider</name>
 	
-	<licenses>
-    	<license>
-	     	<name>Eclipse Public License - v 2.0</name>
-	     	<url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
-	   </license>
-  	</licenses>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub OWNER Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/arrowhead-f/client-library-java-spring</url>
+		</repository>
+	</distributionManagement>
 		
 	<dependencies>
 		<!-- TODO: upload this version of the package to the Github -->
@@ -31,7 +32,7 @@
 		</dependency>
 		-->
 		
-		<!-- TODO: only for development -->
+		<!-- TODO: only for development. Remove after 4.4.1 release -->
 		<dependency>
 			<groupId>eu.arrowhead</groupId>
 			<artifactId>client-library</artifactId>
@@ -39,6 +40,7 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/resources/client-library-4.4.1.jar</systemPath>
 		</dependency>
+		
 		<dependency>
 			<groupId>eu.arrowhead</groupId>
 			<artifactId>core-client-skeleton</artifactId>
@@ -46,6 +48,68 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/resources/core-client-skeleton.jar</systemPath>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		<dependency>
+           <groupId>org.apache.httpcomponents</groupId>
+           <artifactId>httpclient</artifactId>
+        </dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-websocket</artifactId>
+		</dependency>
+
+		<dependency>
+	    	<groupId>org.bitbucket.b_c</groupId>
+	    	<artifactId>jose4j</artifactId>
+	    	<version>0.6.5</version>
+	    </dependency>	    
+	    
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>1.65</version>
+			<scope>compile</scope>
+		</dependency> 
+		<!-- TODO: remove till this -->
 	</dependencies>
 	
 	<build>
