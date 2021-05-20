@@ -17,6 +17,7 @@ public class IcmpPingServiceModel {
 	//=================================================================================================
 	// methods
 
+	//-------------------------------------------------------------------------------------------------
 	public static boolean isRegistrated() { return registrated; }
 	public static void setRegistrated(boolean registrated) { IcmpPingServiceModel.registrated = registrated; }
 
