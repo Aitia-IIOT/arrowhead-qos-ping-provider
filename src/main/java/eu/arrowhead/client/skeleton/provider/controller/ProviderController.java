@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ai.aitia.qosping.service.model.IcmpPingService;
+import ai.aitia.qosping.service.IcmpPingService;
 import ai.aitia.qosping.service.model.IcmpPingServiceModel;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.dto.shared.IcmpPingRequestACK;

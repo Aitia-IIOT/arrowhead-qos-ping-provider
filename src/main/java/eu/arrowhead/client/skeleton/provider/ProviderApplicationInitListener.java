@@ -17,6 +17,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import ai.aitia.qosping.service.model.IcmpPingServiceModel;
+import ai.aitia.qosping.service.task.manager.IcmpPingManager;
 import eu.arrowhead.client.library.ArrowheadService;
 import eu.arrowhead.client.library.config.ApplicationInitListener;
 import eu.arrowhead.client.library.util.ClientCommonConstants;
@@ -40,6 +41,9 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	
 	@Autowired
 	private ProviderSecurityConfig providerSecurityConfig;
+
+	@Autowired
+	private IcmpPingManager icmpPingManager;
 	
 	@Value(ClientCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
 	private boolean tokenSecurityFilterEnabled;
@@ -79,9 +83,21 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 			logger.info("TokenSecurityFilter in not active");
 		}		
 		
-		if (!registerQoSIcmpPingService()) {
+		boolean serviceReady = false;
+		try {
+			icmpPingManager.start();
+			serviceReady = true;
+		} catch (final Exception ex) {
+			logger.error("IcmpPingManager could not start");
+			logger.debug(ex);
 			customDestroy();
 		}
+		
+		if (serviceReady) {
+			if (!registerQoSIcmpPingService()) {
+				customDestroy();
+			}			
+		}		
 	}
 	
 	//-------------------------------------------------------------------------------------------------

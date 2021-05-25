@@ -1,4 +1,4 @@
-package ai.aitia.qosping.service.model;
+package ai.aitia.qosping.service;
 
 import java.util.UUID;
 
