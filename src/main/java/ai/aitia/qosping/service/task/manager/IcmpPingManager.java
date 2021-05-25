@@ -1,6 +1,7 @@
 package ai.aitia.qosping.service.task.manager;
 
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
@@ -66,7 +67,7 @@ public class IcmpPingManager extends Thread {
 				
 				final StartedMonitoringMeasurementEventDTO event = new StartedMonitoringMeasurementEventDTO();
 				event.setEventType(QosMonitorEventType.STARTED_MONITORING_MEASUREMENT);
-				event.setPayload(job.getJobId().toString());
+				event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
 				event.setTimeStamp(ZonedDateTime.now());
 				publisher.publish(event.getEventType(), event);
 				

@@ -3,6 +3,7 @@ package ai.aitia.qosping.service.task.worker;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ai.aitia.qosping.service.publish.Publisher;
 import ai.aitia.qosping.service.task.IcmpPingJob;
 import ai.aitia.qosping.service.task.manager.IcmpPingManager;
+import eu.arrowhead.client.skeleton.provider.Constant;
 import eu.arrowhead.common.dto.shared.FinishedMonitoringMeasurementEventDTO;
 import eu.arrowhead.common.dto.shared.IcmpPingResponseDTO;
 import eu.arrowhead.common.dto.shared.InterruptedMonitoringMeasurementEventDTO;
@@ -93,7 +95,7 @@ public class IcmpPingWorker implements Runnable {
 		} catch (final InterruptedException | IllegalArgumentException ex) {
 			final InterruptedMonitoringMeasurementEventDTO event = new InterruptedMonitoringMeasurementEventDTO();
 			event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT);
-			event.setPayload(job.getJobId().toString());
+			event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
 			event.setTimeStamp(ZonedDateTime.now());
 			publisher.publish(event.getEventType(), event);
 			return;
@@ -101,6 +103,7 @@ public class IcmpPingWorker implements Runnable {
 
 		final FinishedMonitoringMeasurementEventDTO event = new FinishedMonitoringMeasurementEventDTO();
 		event.setEventType(QosMonitorEventType.FINISHED_MONITORING_MEASUREMENT);
+		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
 		event.setPayload(responseList);
 		event.setTimeStamp(ZonedDateTime.now());
 		publisher.publish(event.getEventType(), event);

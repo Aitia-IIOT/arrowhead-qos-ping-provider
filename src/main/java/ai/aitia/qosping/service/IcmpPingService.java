@@ -1,6 +1,7 @@
 package ai.aitia.qosping.service;
 
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.util.Assert;
 import ai.aitia.qosping.service.publish.Publisher;
 import ai.aitia.qosping.service.task.IcmpPingJob;
 import ai.aitia.qosping.service.task.queue.IcmpPingJobQueue;
+import eu.arrowhead.client.skeleton.provider.Constant;
 import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.dto.shared.IcmpPingRequestACK;
 import eu.arrowhead.common.dto.shared.IcmpPingRequestDTO;
@@ -49,7 +51,7 @@ public class IcmpPingService {
 		
 		final ReceivedMonitoringRequestEventDTO event = new ReceivedMonitoringRequestEventDTO();
 		event.setEventType(QosMonitorEventType.RECEIVED_MONITORING_REQUEST);
-		event.setPayload(job.getJobId().toString());
+		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
 		event.setTimeStamp(ZonedDateTime.now());
 		publisher.publish(event.getEventType(), event);
 		
