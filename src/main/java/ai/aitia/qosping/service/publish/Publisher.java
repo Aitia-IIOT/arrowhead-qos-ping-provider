@@ -44,6 +44,8 @@ public class Publisher {
 	@Autowired
 	private ObjectMapper mapper;
 	
+	private SystemRequestDTO sourceSystem;
+	
 	private final Logger logger = LogManager.getLogger(Publisher.class);
 	
 	//=================================================================================================
@@ -71,14 +73,18 @@ public class Publisher {
 	// assistant methods
 
 	//-------------------------------------------------------------------------------------------------
-	private SystemRequestDTO getSource() {
-		final SystemRequestDTO source = new SystemRequestDTO();
-		source.setSystemName(clientSystemName);
-		source.setAddress(clientSystemAddress);
-		source.setPort(clientSystemPort);
-		if (sslEnabled) {
-			source.setAuthenticationInfo( Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
-		}
-		return source;
+	private SystemRequestDTO getSource() {		
+		if (sourceSystem != null) {
+			return sourceSystem;
+		} else {			
+			final SystemRequestDTO source = new SystemRequestDTO();
+			source.setSystemName(clientSystemName);
+			source.setAddress(clientSystemAddress);
+			source.setPort(clientSystemPort);
+			if (sslEnabled) {
+				source.setAuthenticationInfo( Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
+			}
+			return source;
+		}		
 	}
 }

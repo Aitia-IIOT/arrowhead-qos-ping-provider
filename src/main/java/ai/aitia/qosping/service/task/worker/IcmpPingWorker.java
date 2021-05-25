@@ -63,7 +63,9 @@ public class IcmpPingWorker implements Runnable {
 			request.setHost(job.getHost());
 			request.setTimeout(job.getTimeout());
 			request.setPacketSize(job.getPacketSize());
-			request.setTtl(job.getTtl());
+			if (job.getTtl() != null) {
+				request.setTtl(job.getTtl());				
+			}
 			
 			for (int count = 0; count < job.getTimeToRepeat(); count ++) {
 				IcmpPingResponse response;
@@ -83,7 +85,7 @@ public class IcmpPingWorker implements Runnable {
 				dto.setSuccessFlag(response.getSuccessFlag());
 				dto.setTimeoutFlag(response.getTimeoutFlag());
 				dto.setErrorMessage(response.getErrorMessage());
-				dto.setThrowable(response.getThrowable() == null ? null : response.getThrowable().getClass().getSimpleName());
+				dto.setThrowable(response.getThrowable() == null ? null : response.getThrowable().getClass().getName());
 				dto.setHost(response.getHost());
 				dto.setSize(response.getSize());
 				dto.setRtt(response.getRtt());

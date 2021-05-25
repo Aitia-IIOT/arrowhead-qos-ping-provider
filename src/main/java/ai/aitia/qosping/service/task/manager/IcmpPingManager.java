@@ -53,7 +53,7 @@ public class IcmpPingManager extends Thread {
 		logger.trace("IcmpPingManager.run started...");
 		
 		if (doWork) {
-			throw new UnsupportedOperationException("IcmpPingManager is already started");
+			throw new IllegalStateException("IcmpPingManager is already started");
 		}
 		setName(IcmpPingManager.class.getSimpleName());
 		
