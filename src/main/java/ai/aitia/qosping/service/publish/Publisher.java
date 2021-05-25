@@ -3,11 +3,12 @@ package ai.aitia.qosping.service.publish;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import eu.arrowhead.client.library.ArrowheadService;
@@ -42,17 +43,24 @@ public class Publisher {
 	@Autowired
 	private ObjectMapper mapper;
 	
+	private final Logger logger = LogManager.getLogger(Publisher.class);
+	
 	//=================================================================================================
 	// methods
 
 	//-------------------------------------------------------------------------------------------------
-	public void publish(final QosMonitorEventType eventType, final Object payload) throws JsonProcessingException {
-		final EventPublishRequestDTO event = new EventPublishRequestDTO(eventType.name(),
-																		getSource(),
-																		null,
-																		mapper.writeValueAsString(payload),
-																		Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
-		arrowheadService.publishToEventHandler(event);
+	public void publish(final QosMonitorEventType eventType, final Object payload) {
+		try {
+			final EventPublishRequestDTO event = new EventPublishRequestDTO(eventType.name(),
+																			getSource(),
+																			null,
+																			mapper.writeValueAsString(payload),
+																			Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
+			arrowheadService.publishToEventHandler(event);			
+		} catch (final Exception ex) {
+			logger.error(ex.getMessage());
+			logger.debug(ex);
+		}
 	}
 	
 	//=================================================================================================

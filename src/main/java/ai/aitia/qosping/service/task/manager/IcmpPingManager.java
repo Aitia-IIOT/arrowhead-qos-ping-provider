@@ -1,5 +1,6 @@
 package ai.aitia.qosping.service.task.manager;
 
+import java.time.ZonedDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
@@ -10,16 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import ai.aitia.qosping.service.publish.Publisher;
 import ai.aitia.qosping.service.task.IcmpPingJob;
 import ai.aitia.qosping.service.task.queue.IcmpPingJobQueue;
 import ai.aitia.qosping.service.task.worker.IcmpPingWorker;
 import eu.arrowhead.client.skeleton.provider.Constant;
+import eu.arrowhead.common.dto.shared.QosMonitorEventType;
+import eu.arrowhead.common.dto.shared.StartedMonitoringMeasurementEventDTO;
 
 @Component
 public class IcmpPingManager extends Thread {
 
 	//=================================================================================================
 	// members
+	
+	@Autowired
+	private Publisher publisher;
 	
 	@Autowired
 	private IcmpPingJobQueue jobQueue;
@@ -54,7 +61,15 @@ public class IcmpPingManager extends Thread {
 		
 		while (doWork) {
 			try {
-				threadPool.execute(icmpPingWorkerFactory.apply(jobQueue.take()));
+				final IcmpPingJob job = jobQueue.take();
+				threadPool.execute(icmpPingWorkerFactory.apply(job));
+				
+				final StartedMonitoringMeasurementEventDTO event = new StartedMonitoringMeasurementEventDTO();
+				event.setEventType(QosMonitorEventType.STARTED_MONITORING_MEASUREMENT);
+				event.setPayload(job.getJobId().toString());
+				event.setTimeStamp(ZonedDateTime.now());
+				publisher.publish(event.getEventType(), event);
+				
 			} catch (final InterruptedException ex) {
 				logger.error(ex);
 				logger.debug(ex.getMessage(), ex);
