@@ -61,8 +61,12 @@ public class IcmpPingWorker implements Runnable {
 		try {
 			final IcmpPingRequest request = IcmpPingUtil.createIcmpPingRequest();
 			request.setHost(job.getHost());
-			request.setTimeout(job.getTimeout());
-			request.setPacketSize(job.getPacketSize());
+			if (job.getTimeout() != null) {
+				request.setTimeout(job.getTimeout());				
+			}
+			if (job.getPacketSize() != null) {
+				request.setPacketSize(job.getPacketSize());				
+			}
 			if (job.getTtl() != null) {
 				request.setTtl(job.getTtl());				
 			}

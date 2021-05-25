@@ -58,18 +58,12 @@ public class ProviderController {
 			throw new BadPayloadException("IcmpPingRequestDTO.ttl is negative or zero", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
 		}
 		
-		if (dto.getPacketSize() == null) {
-			throw new BadPayloadException("IcmpPingRequestDTO.packetSize is null", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
-		}
-		if (dto.getPacketSize() < 0) {
-			throw new BadPayloadException("IcmpPingRequestDTO.packetSize is negative", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
+		if (dto.getPacketSize() != null && dto.getPacketSize() <= 0) {
+			throw new BadPayloadException("IcmpPingRequestDTO.packetSize is negative or zero", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
 		}
 		
-		if (dto.getTimeout() == null) {
-			throw new BadPayloadException("IcmpPingRequestDTO.timeout is null", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
-		}
-		if (dto.getTimeout() < 0) {
-			throw new BadPayloadException("IcmpPingRequestDTO.timeout is negative", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
+		if (dto.getTimeout() != null && dto.getTimeout() <= 0) {
+			throw new BadPayloadException("IcmpPingRequestDTO.timeout is negative or zero", HttpStatus.BAD_REQUEST.value(), IcmpPingServiceModel.SERVICE_URI);
 		}
 		
 		if (dto.getTimeToRepeat() == null) {

@@ -14,15 +14,15 @@ public class IcmpPingJob {
 	private final  UUID jobId;
 	private final String host;
 	private final Integer ttl;
-	private final int packetSize;
-	private final long timeout;
+	private final Integer packetSize;
+	private final Long timeout;
 	private final int timeToRepeat;
 	
 	//=================================================================================================
 	// methods
 
 	//-------------------------------------------------------------------------------------------------	
-	public IcmpPingJob(final UUID jobId, final String host, final Integer ttl, final int packetSize, final long timeout, final int timeToRepeat) {
+	public IcmpPingJob(final UUID jobId, final String host, final Integer ttl, final Integer packetSize, final Long timeout, final int timeToRepeat) {
 		Assert.notNull(jobId, "jobId is null.");
 		Assert.isTrue(!Utilities.isEmpty(host), "host is empty");
 		
@@ -38,7 +38,7 @@ public class IcmpPingJob {
 	public UUID getJobId() { return jobId; }
 	public String getHost() { return host; }
 	public Integer getTtl() { return ttl; }
-	public int getPacketSize() { return packetSize; }
-	public long getTimeout() { return timeout; }
+	public Integer getPacketSize() { return packetSize; }
+	public Long getTimeout() { return timeout; }
 	public int getTimeToRepeat() { return timeToRepeat; }
 }
