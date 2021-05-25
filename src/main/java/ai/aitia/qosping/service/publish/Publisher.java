@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,6 +51,9 @@ public class Publisher {
 
 	//-------------------------------------------------------------------------------------------------
 	public void publish(final QosMonitorEventType eventType, final Object payload) {
+		Assert.notNull(eventType, "eventType is null");
+		Assert.notNull(payload, "payload is null");
+		
 		try {
 			final EventPublishRequestDTO event = new EventPublishRequestDTO(eventType.name(),
 																			getSource(),

@@ -11,6 +11,7 @@ import org.icmp4j.IcmpPingRequest;
 import org.icmp4j.IcmpPingResponse;
 import org.icmp4j.IcmpPingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import ai.aitia.qosping.service.publish.Publisher;
 import ai.aitia.qosping.service.task.IcmpPingJob;
@@ -40,6 +41,7 @@ public class IcmpPingWorker implements Runnable {
 	
 	//-------------------------------------------------------------------------------------------------
 	public IcmpPingWorker(final IcmpPingJob job) {
+		Assert.notNull(job, "job is null");
 		this.job = job;
 	}
 
