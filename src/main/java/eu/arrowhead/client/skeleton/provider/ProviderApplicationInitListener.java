@@ -83,6 +83,9 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 			logger.info("TokenSecurityFilter in not active");
 		}		
 		
+		checkCoreSystemReachability(CoreSystem.EVENTHANDLER);
+		arrowheadService.updateCoreServiceURIs(CoreSystem.EVENTHANDLER);
+		
 		boolean serviceReady = false;
 		try {
 			icmpPingManager.start();
