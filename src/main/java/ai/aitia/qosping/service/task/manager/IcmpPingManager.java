@@ -17,8 +17,9 @@ import ai.aitia.qosping.service.task.IcmpPingJob;
 import ai.aitia.qosping.service.task.queue.IcmpPingJobQueue;
 import ai.aitia.qosping.service.task.worker.IcmpPingWorker;
 import eu.arrowhead.client.skeleton.provider.Constant;
+import eu.arrowhead.common.Utilities;
+import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;
 import eu.arrowhead.common.dto.shared.QosMonitorEventType;
-import eu.arrowhead.common.dto.shared.StartedMonitoringMeasurementEventDTO;
 
 @Component
 public class IcmpPingManager extends Thread {
@@ -48,6 +49,7 @@ public class IcmpPingManager extends Thread {
 	// methods
 	
 	//-------------------------------------------------------------------------------------------------
+	@SuppressWarnings("unused")
 	@Override
 	public void run() {
 		logger.trace("IcmpPingManager.run started...");
@@ -61,20 +63,23 @@ public class IcmpPingManager extends Thread {
 		doWork = true;
 		
 		while (doWork) {
+			IcmpPingJob job = null;
+			
 			try {
-				final IcmpPingJob job = jobQueue.take();
+				job = jobQueue.take();
 				threadPool.execute(icmpPingWorkerFactory.apply(job));
 				
-				final StartedMonitoringMeasurementEventDTO event = new StartedMonitoringMeasurementEventDTO();
-				event.setEventType(QosMonitorEventType.STARTED_MONITORING_MEASUREMENT);
-				event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
-				event.setTimeStamp(ZonedDateTime.now());
-				publisher.publish(event.getEventType(), event);
-				
 			} catch (final InterruptedException ex) {
+				if (job != null) {
+					final EventPublishRequestDTO event = new EventPublishRequestDTO();
+					event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT.name());
+					event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString(), Constant.EXCEPTION, ex.getMessage()));
+					event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
+					publisher.publish(event);					
+				}
 				logger.error(ex);
 				logger.debug(ex.getMessage(), ex);
-				interrupt();
+				interrupt();					
 			}
 		}
 	}

@@ -13,13 +13,16 @@ import org.icmp4j.IcmpPingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ai.aitia.qosping.service.publish.Publisher;
 import ai.aitia.qosping.service.task.IcmpPingJob;
 import ai.aitia.qosping.service.task.manager.IcmpPingManager;
 import eu.arrowhead.client.skeleton.provider.Constant;
-import eu.arrowhead.common.dto.shared.FinishedMonitoringMeasurementEventDTO;
+import eu.arrowhead.common.Utilities;
+import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;
 import eu.arrowhead.common.dto.shared.IcmpPingResponseDTO;
-import eu.arrowhead.common.dto.shared.InterruptedMonitoringMeasurementEventDTO;
 import eu.arrowhead.common.dto.shared.QosMonitorEventType;
 
 public class IcmpPingWorker implements Runnable {
@@ -31,6 +34,9 @@ public class IcmpPingWorker implements Runnable {
 	
 	@Autowired
 	private Publisher publisher;
+	
+	@Autowired
+	private ObjectMapper mapper;
 	
 	private static final int PING_REST = 1000;
 	
@@ -48,6 +54,8 @@ public class IcmpPingWorker implements Runnable {
 	//-------------------------------------------------------------------------------------------------
 	@Override
 	public void run() {
+		publishStarted();
+		
 		pingAndPublish();
 	}
 	
@@ -101,19 +109,45 @@ public class IcmpPingWorker implements Runnable {
 			}
 			
 		} catch (final InterruptedException | IllegalArgumentException ex) {
-			final InterruptedMonitoringMeasurementEventDTO event = new InterruptedMonitoringMeasurementEventDTO();
-			event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT);
-			event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
-			event.setTimeStamp(ZonedDateTime.now());
-			publisher.publish(event.getEventType(), event);
+			publishInterrupted(ex);
 			return;
 		}
+		
+		String payloadStr = "";
+		try {
+			payloadStr = mapper.writeValueAsString(responseList);
+		} catch (final JsonProcessingException ex) {
+			publishInterrupted(ex);
+		}
 
-		final FinishedMonitoringMeasurementEventDTO event = new FinishedMonitoringMeasurementEventDTO();
-		event.setEventType(QosMonitorEventType.FINISHED_MONITORING_MEASUREMENT);
+		publishFinished(payloadStr);
+	}
+	
+	//-------------------------------------------------------------------------------------------------
+	private void publishStarted() {
+		final EventPublishRequestDTO event = new EventPublishRequestDTO();
+		event.setEventType(QosMonitorEventType.STARTED_MONITORING_MEASUREMENT.name());
 		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
-		event.setPayload(responseList);
-		event.setTimeStamp(ZonedDateTime.now());
-		publisher.publish(event.getEventType(), event);
+		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
+		publisher.publish(event);
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	private void publishFinished(final String payloadStr) {
+		final EventPublishRequestDTO event = new EventPublishRequestDTO();
+		event.setEventType(QosMonitorEventType.FINISHED_MONITORING_MEASUREMENT.name());
+		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
+		event.setPayload(payloadStr);
+		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
+		publisher.publish(event);
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	private void publishInterrupted(final Exception ex) {
+		final EventPublishRequestDTO event = new EventPublishRequestDTO();
+		event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT.name());
+		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString(), Constant.EXCEPTION, ex.getMessage()));
+		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
+		publisher.publish(event);
 	}
 }

@@ -13,10 +13,10 @@ import ai.aitia.qosping.service.task.IcmpPingJob;
 import ai.aitia.qosping.service.task.queue.IcmpPingJobQueue;
 import eu.arrowhead.client.skeleton.provider.Constant;
 import eu.arrowhead.common.Utilities;
+import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;
 import eu.arrowhead.common.dto.shared.IcmpPingRequestACK;
 import eu.arrowhead.common.dto.shared.IcmpPingRequestDTO;
 import eu.arrowhead.common.dto.shared.QosMonitorEventType;
-import eu.arrowhead.common.dto.shared.ReceivedMonitoringRequestEventDTO;
 
 @Service
 public class IcmpPingService {
@@ -40,13 +40,8 @@ public class IcmpPingService {
 		validateIcmpPingRequestDTO(request);
 		
 		final IcmpPingJob job = new IcmpPingJob(UUID.randomUUID(), request.getHost(), request.getTtl(), request.getPacketSize(), request.getTimeout(), request.getTimeToRepeat());
-		jobQueue.put(job);
-		
-		final ReceivedMonitoringRequestEventDTO event = new ReceivedMonitoringRequestEventDTO();
-		event.setEventType(QosMonitorEventType.RECEIVED_MONITORING_REQUEST);
-		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
-		event.setTimeStamp(ZonedDateTime.now());
-		publisher.publish(event.getEventType(), event);
+		publishReceived(job);
+		jobQueue.put(job);		
 		
 		final IcmpPingRequestACK ack = new IcmpPingRequestACK();
 		ack.setAckOk(ACK_MSG);
@@ -72,5 +67,14 @@ public class IcmpPingService {
 		}
 		Assert.notNull(request.getTimeToRepeat(), "request.timeToRepeat is null");
 		Assert.isTrue(request.getTimeToRepeat() > 0, "request.timeToRepeat is negative or zero");
+	}
+	
+	//-------------------------------------------------------------------------------------------------
+	private void publishReceived(final IcmpPingJob job) {
+		final EventPublishRequestDTO event = new EventPublishRequestDTO();
+		event.setEventType(QosMonitorEventType.RECEIVED_MONITORING_REQUEST.name());
+		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
+		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
+		publisher.publish(event);
 	}
 }

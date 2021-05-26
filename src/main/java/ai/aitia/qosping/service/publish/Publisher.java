@@ -1,6 +1,5 @@
 package ai.aitia.qosping.service.publish;
 
-import java.time.ZonedDateTime;
 import java.util.Base64;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,14 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import eu.arrowhead.client.library.ArrowheadService;
 import eu.arrowhead.client.library.util.ClientCommonConstants;
 import eu.arrowhead.common.CommonConstants;
-import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;
-import eu.arrowhead.common.dto.shared.QosMonitorEventType;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
 
 @Service
@@ -41,9 +36,6 @@ public class Publisher {
 	@Autowired
 	private ArrowheadService arrowheadService;
 	
-	@Autowired
-	private ObjectMapper mapper;
-	
 	private SystemRequestDTO sourceSystem;
 	
 	private final Logger logger = LogManager.getLogger(Publisher.class);
@@ -52,16 +44,11 @@ public class Publisher {
 	// methods
 
 	//-------------------------------------------------------------------------------------------------
-	public void publish(final QosMonitorEventType eventType, final Object payload) {
-		Assert.notNull(eventType, "eventType is null");
-		Assert.notNull(payload, "payload is null");
+	public void publish(final EventPublishRequestDTO event) {
+		Assert.notNull(event, "event is null");
+		event.setSource(getSource());		
 		
 		try {
-			final EventPublishRequestDTO event = new EventPublishRequestDTO(eventType.name(),
-																			getSource(),
-																			null,
-																			mapper.writeValueAsString(payload),
-																			Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
 			arrowheadService.publishToEventHandler(event);			
 		} catch (final Exception ex) {
 			logger.error(ex.getMessage());
@@ -82,7 +69,7 @@ public class Publisher {
 			sourceSystem.setAddress(clientSystemAddress);
 			sourceSystem.setPort(clientSystemPort);
 			if (sslEnabled) {
-				sourceSystem.setAuthenticationInfo( Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
+				sourceSystem.setAuthenticationInfo(Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
 			}
 			return sourceSystem;
 		}		
