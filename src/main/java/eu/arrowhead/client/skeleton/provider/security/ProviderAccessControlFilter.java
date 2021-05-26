@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import eu.arrowhead.client.library.util.ClientCommonConstants;
 import eu.arrowhead.common.CommonConstants;
+import eu.arrowhead.common.core.CoreSystem;
+import eu.arrowhead.common.exception.AuthException;
 import eu.arrowhead.common.security.AccessControlFilter;
 
 @Component
@@ -17,6 +19,10 @@ public class ProviderAccessControlFilter extends AccessControlFilter {
 	protected void checkClientAuthorized(final String clientCN, final String method, final String requestTarget, final String requestJSON, final Map<String,String[]> queryParams) {
 		super.checkClientAuthorized(clientCN, method, requestTarget, requestJSON, queryParams);
 		
-		//TODO: implement here your custom access filter if any further
+		final String allowedClient = CoreSystem.QOSMONITOR.name().toLowerCase() + "." + getServerCloudCN();
+		if (!clientCN.equalsIgnoreCase(allowedClient)) {
+			log.debug("Only QoS Monitor core system is allowed to use this provider");
+			throw new AuthException(clientCN + " is unauthorized to access " + requestTarget);
+		}
 	}
 }
