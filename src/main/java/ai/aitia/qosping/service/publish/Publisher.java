@@ -77,14 +77,14 @@ public class Publisher {
 		if (sourceSystem != null) {
 			return sourceSystem;
 		} else {			
-			final SystemRequestDTO source = new SystemRequestDTO();
-			source.setSystemName(clientSystemName);
-			source.setAddress(clientSystemAddress);
-			source.setPort(clientSystemPort);
+			sourceSystem = new SystemRequestDTO();
+			sourceSystem.setSystemName(clientSystemName);
+			sourceSystem.setAddress(clientSystemAddress);
+			sourceSystem.setPort(clientSystemPort);
 			if (sslEnabled) {
-				source.setAuthenticationInfo( Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
+				sourceSystem.setAuthenticationInfo( Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
 			}
-			return source;
+			return sourceSystem;
 		}		
 	}
 }
