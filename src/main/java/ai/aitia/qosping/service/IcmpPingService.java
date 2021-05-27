@@ -74,6 +74,7 @@ public class IcmpPingService {
 		final EventPublishRequestDTO event = new EventPublishRequestDTO();
 		event.setEventType(QosMonitorEventType.RECEIVED_MONITORING_REQUEST.name());
 		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
+		event.setPayload(Constant.EMPTY_ARRAY_STR);
 		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
 		publisher.publish(event);
 	}

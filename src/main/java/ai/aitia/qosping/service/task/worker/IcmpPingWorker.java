@@ -53,9 +53,7 @@ public class IcmpPingWorker implements Runnable {
 
 	//-------------------------------------------------------------------------------------------------
 	@Override
-	public void run() {
-		publishStarted();
-		
+	public void run() {			
 		pingAndPublish();
 	}
 	
@@ -64,6 +62,7 @@ public class IcmpPingWorker implements Runnable {
 	
 	//-------------------------------------------------------------------------------------------------
 	private void pingAndPublish() {
+		publishStarted();
 		final List<IcmpPingResponseDTO> responseList = new ArrayList<>(job.getTimeToRepeat());
 		
 		try {
@@ -128,6 +127,7 @@ public class IcmpPingWorker implements Runnable {
 		final EventPublishRequestDTO event = new EventPublishRequestDTO();
 		event.setEventType(QosMonitorEventType.STARTED_MONITORING_MEASUREMENT.name());
 		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString()));
+		event.setPayload(Constant.EMPTY_ARRAY_STR);
 		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
 		publisher.publish(event);
 	}
@@ -147,6 +147,7 @@ public class IcmpPingWorker implements Runnable {
 		final EventPublishRequestDTO event = new EventPublishRequestDTO();
 		event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT.name());
 		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString(), Constant.EXCEPTION, ex.getMessage()));
+		event.setPayload(Constant.EMPTY_ARRAY_STR);
 		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
 		publisher.publish(event);
 	}
