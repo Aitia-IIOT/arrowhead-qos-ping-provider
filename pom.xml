@@ -10,17 +10,22 @@
 	
 	<groupId>ai.aitia</groupId>	
 	<artifactId>qos-ping-provider</artifactId>
-	<version>0.0.1</version>
+	<version>4.4.1</version>
 	<packaging>jar</packaging>
 	<name>Arrowhead QoS Ping Provider</name>
 	
-	<distributionManagement>
+	<repositories>
 		<repository>
 			<id>github</id>
 			<name>GitHub OWNER Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/arrowhead-f/client-library-java-spring</url>
 		</repository>
-	</distributionManagement>
+		<repository>
+			<id>jenkins-repo</id>
+			<name>Jenkins Repository</name>
+			<url>https://repo.jenkins-ci.org/public/</url>
+		</repository>
+	</repositories>
 		
 	<dependencies>
 		<!-- TODO: upload this version of the package to the Github -->
@@ -31,6 +36,12 @@
 			<version>4.4.1</version>
 		</dependency>
 		-->
+		
+		<dependency>
+        	<groupId>sheltekio.javalibs</groupId>
+        	<artifactId>icmp4j</artifactId>
+        	<version>1.2</version>
+    	</dependency>
 		
 		<!-- TODO: only for development. Remove after 4.4.1 release -->
 		<dependency>
