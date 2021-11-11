@@ -72,7 +72,7 @@ public class IcmpPingManager extends Thread {
 			} catch (final InterruptedException ex) {
 				if (job != null) {
 					final EventPublishRequestDTO event = new EventPublishRequestDTO();
-					event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT.name());
+					event.setEventType(QosMonitorEventType.INTERRUPTED_MONITORING_MEASUREMENT.name());
 					event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString(), Constant.EXCEPTION, ex.getMessage()));
 					event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
 					publisher.publish(event);					

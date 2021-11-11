@@ -145,7 +145,7 @@ public class IcmpPingWorker implements Runnable {
 	//-------------------------------------------------------------------------------------------------
 	private void publishInterrupted(final Exception ex) {
 		final EventPublishRequestDTO event = new EventPublishRequestDTO();
-		event.setEventType(QosMonitorEventType.INTERUPTED_MONITORING_MEASUREMENT.name());
+		event.setEventType(QosMonitorEventType.INTERRUPTED_MONITORING_MEASUREMENT.name());
 		event.setMetaData(Map.of(Constant.PROCESS_ID, job.getJobId().toString(), Constant.EXCEPTION, ex.getMessage()));
 		event.setPayload(Constant.EMPTY_ARRAY_STR);
 		event.setTimeStamp(Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now()));
