@@ -6,8 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
-import eu.arrowhead.client.library.config.DefaultSecurityConfig;
-import eu.arrowhead.client.library.util.ClientCommonConstants;
+import ai.aitia.arrowhead.application.library.config.DefaultSecurityConfig;
+import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 
 @Configuration
 @EnableWebSecurity
@@ -16,7 +16,7 @@ public class ProviderSecurityConfig extends DefaultSecurityConfig {
 	//=================================================================================================
 	// members
 	
-	@Value(ClientCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
+	@Value(ApplicationCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
 	private boolean tokenSecurityFilterEnabled;
 	
 	private ProviderTokenSecurityFilter tokenSecurityFilter;

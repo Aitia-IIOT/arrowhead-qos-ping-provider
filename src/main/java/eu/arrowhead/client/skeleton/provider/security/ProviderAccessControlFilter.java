@@ -5,14 +5,14 @@ import java.util.Map;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
-import eu.arrowhead.client.library.util.ClientCommonConstants;
+import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.core.CoreSystem;
 import eu.arrowhead.common.exception.AuthException;
 import eu.arrowhead.common.security.AccessControlFilter;
 
 @Component
-@ConditionalOnExpression(CommonConstants.$SERVER_SSL_ENABLED_WD + " and !" + ClientCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
+@ConditionalOnExpression(CommonConstants.$SERVER_SSL_ENABLED_WD + " and !" + ApplicationCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
 public class ProviderAccessControlFilter extends AccessControlFilter {
 	
 	@Override
