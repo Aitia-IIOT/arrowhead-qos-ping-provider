@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import ai.aitia.arrowhead.application.library.ArrowheadService;
+import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
+import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import ai.aitia.qosping.service.model.IcmpPingServiceModel;
 import ai.aitia.qosping.service.task.manager.IcmpPingManager;
-import eu.arrowhead.client.library.ArrowheadService;
-import eu.arrowhead.client.library.config.ApplicationInitListener;
-import eu.arrowhead.client.library.util.ClientCommonConstants;
 import eu.arrowhead.client.skeleton.provider.security.ProviderSecurityConfig;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
@@ -45,19 +45,19 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	@Autowired
 	private IcmpPingManager icmpPingManager;
 	
-	@Value(ClientCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
+	@Value(ApplicationCommonConstants.$TOKEN_SECURITY_FILTER_ENABLED_WD)
 	private boolean tokenSecurityFilterEnabled;
 	
 	@Value(CommonConstants.$SERVER_SSL_ENABLED_WD)
 	private boolean sslEnabled;
 	
-	@Value(ClientCommonConstants.$CLIENT_SYSTEM_NAME)
+	@Value(ApplicationCommonConstants.$APPLICATION_SYSTEM_NAME)
 	private String mySystemName;
 	
-	@Value(ClientCommonConstants.$CLIENT_SERVER_ADDRESS_WD)
+	@Value(ApplicationCommonConstants.$APPLICATION_SERVER_ADDRESS_WD)
 	private String mySystemAddress;
 	
-	@Value(ClientCommonConstants.$CLIENT_SERVER_PORT_WD)
+	@Value(ApplicationCommonConstants.$APPLICATION_SERVER_PORT_WD)
 	private int mySystemPort;
 	
 	private final Logger logger = LogManager.getLogger(ProviderApplicationInitListener.class);

@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import eu.arrowhead.client.library.ArrowheadService;
-import eu.arrowhead.client.library.util.ClientCommonConstants;
+import ai.aitia.arrowhead.application.library.ArrowheadService;
+import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
@@ -21,13 +21,13 @@ public class Publisher {
 	//=================================================================================================
 	// members
 	
-	@Value(ClientCommonConstants.$CLIENT_SYSTEM_NAME)
+	@Value(ApplicationCommonConstants.$APPLICATION_SYSTEM_NAME)
 	private String clientSystemName;
 	
-	@Value(ClientCommonConstants.$CLIENT_SERVER_ADDRESS_WD)
+	@Value(ApplicationCommonConstants.$APPLICATION_SERVER_ADDRESS_WD)
 	private String clientSystemAddress;
 	
-	@Value(ClientCommonConstants.$CLIENT_SERVER_PORT_WD)
+	@Value(ApplicationCommonConstants.$APPLICATION_SERVER_PORT_WD)
 	private int clientSystemPort;
 	
 	@Value(CommonConstants.$SERVER_SSL_ENABLED_WD)
