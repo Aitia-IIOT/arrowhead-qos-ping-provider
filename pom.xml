@@ -10,9 +10,13 @@
 	
 	<groupId>ai.aitia</groupId>	
 	<artifactId>qos-ping-provider</artifactId>
-	<version>4.4.0.0</version>
+	<version>4.4.0.1</version>
 	<packaging>jar</packaging>
 	<name>Arrowhead QoS Ping Provider</name>
+	
+	<properties>
+		<log4j2.version>2.17.0</log4j2.version>
+	</properties>
 	
 	<repositories>
 		<repository>
@@ -26,7 +30,7 @@
 		<dependency>
 		   <groupId>ai.aitia</groupId>
 		   <artifactId>arrowhead-application-library-java-spring</artifactId>
-		   <version>4.4.0.0</version>
+		   <version>4.4.0.1</version>
 		</dependency>		
 		<dependency>
         	<groupId>sheltekio.javalibs</groupId>
